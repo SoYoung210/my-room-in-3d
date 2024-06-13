@@ -42,15 +42,22 @@ gltfLoader.setDRACOLoader(dracoLoader)
 /**
  * Textures
  */
-const bakedTexture = textureLoader.load('baked1.png')
+const bakedTexture = textureLoader.load('my-room-real-final-bake-merge-exclude-chair-2.jpg')
 bakedTexture.flipY = false
 bakedTexture.colorSpace = THREE.SRGBColorSpace
+
+const chairTexture = textureLoader.load('chairs.jpg')
+console.log('chairTexture',chairTexture)
+chairTexture.flipY = false
+chairTexture.colorSpace = THREE.SRGBColorSpace
 
 /**
  * Materials
  */
 // Baked material
 const bakedMaterial = new THREE.MeshBasicMaterial({ map: bakedTexture })
+const chairMaterial = new THREE.MeshBasicMaterial({ map: chairTexture })
+const bakedMaterial2 = new THREE.MeshBasicMaterial({ color: 0xffffff  })
 
 // Portal light material
 const portalLightMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff })
@@ -58,24 +65,53 @@ const portalLightMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff })
 // Pole light material
 const poleLightMaterial = new THREE.MeshBasicMaterial({ color: 0xffffe5 })
 const light = new THREE.AmbientLight( 0xffffe5 );
-
+scene.add(light);
 // scene.add( light );
 /**
  * Model
  */
 gltfLoader.load(
-    'my-room-test09.glb',
+    'my-room-real-final-bake-merge-exclude-chair.glb',
     (gltf) => {
-        const bakedMesh = gltf.scene.children.find(child => child.name === 'baked')
+        const bakedMesh = gltf.scene.children.find(child => child.name === 'materials')
+
         // const portalLightMesh = gltf.scene.children.find(child => child.name === 'portalLight')
         // const poleLightAMesh = gltf.scene.children.find(child => child.name === 'poleLightA')
         // const poleLightBMesh = gltf.scene.children.find(child => child.name === 'poleLightB')
 
-        bakedMesh.material = bakedMaterial
+        // bakedMesh.material = bakedMaterial
+        gltf.scene.traverse((child) => {
+            child.material = bakedMaterial
+        })
         // portalLightMesh.material = portalLightMaterial
         // poleLightAMesh.material = poleLightMaterial
         // poleLightBMesh.material = poleLightMaterial
+         gltf.scene.position.y = -3;
+        scene.add(gltf.scene)
+    }
+)
 
+gltfLoader.load(
+    'chair.glb',
+    (gltf) => {
+        // const chairMesh = gltf.scene.children.find(child => child.name === 'materials')
+
+        // const portalLightMesh = gltf.scene.children.find(child => child.name === 'portalLight')
+        // const poleLightAMesh = gltf.scene.children.find(child => child.name === 'poleLightA')
+        // const poleLightBMesh = gltf.scene.children.find(child => child.name === 'poleLightB')
+
+        // bakedMesh.material = bakedMaterial
+        gltf.scene.traverse((child) => {
+            child.material = chairMaterial
+        });
+
+        gltf.scene.traverse((child) => {
+          console.log('child mateiral', child.material);
+        })
+        // portalLightMesh.material = portalLightMaterial
+        // poleLightAMesh.material = poleLightMaterial
+        // poleLightBMesh.material = poleLightMaterial
+         gltf.scene.position.y = -3;
         scene.add(gltf.scene)
     }
 )
@@ -108,9 +144,11 @@ window.addEventListener('resize', () =>
  */
 // Base camera
 const camera = new THREE.PerspectiveCamera(45, sizes.width / sizes.height, 0.1, 100)
-camera.position.x = 4
-camera.position.y = 2
-camera.position.z = 4
+camera.position.x = 19
+camera.position.y = 9
+camera.position.z = 23
+camera.zoom = 1.5
+camera.updateProjectionMatrix()
 scene.add(camera)
 
 // Controls
