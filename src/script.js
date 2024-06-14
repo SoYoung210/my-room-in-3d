@@ -47,7 +47,6 @@ bakedTexture.flipY = false
 bakedTexture.colorSpace = THREE.SRGBColorSpace
 
 const chairTexture = textureLoader.load('chairs.jpg')
-console.log('chairTexture',chairTexture)
 chairTexture.flipY = false
 chairTexture.colorSpace = THREE.SRGBColorSpace
 
@@ -94,23 +93,10 @@ gltfLoader.load(
 gltfLoader.load(
     'chair.glb',
     (gltf) => {
-        // const chairMesh = gltf.scene.children.find(child => child.name === 'materials')
-
-        // const portalLightMesh = gltf.scene.children.find(child => child.name === 'portalLight')
-        // const poleLightAMesh = gltf.scene.children.find(child => child.name === 'poleLightA')
-        // const poleLightBMesh = gltf.scene.children.find(child => child.name === 'poleLightB')
-
-        // bakedMesh.material = bakedMaterial
         gltf.scene.traverse((child) => {
             child.material = chairMaterial
         });
 
-        gltf.scene.traverse((child) => {
-          console.log('child mateiral', child.material);
-        })
-        // portalLightMesh.material = portalLightMaterial
-        // poleLightAMesh.material = poleLightMaterial
-        // poleLightBMesh.material = poleLightMaterial
          gltf.scene.position.y = -3;
         scene.add(gltf.scene)
     }
