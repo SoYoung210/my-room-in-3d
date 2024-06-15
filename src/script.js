@@ -19,9 +19,14 @@ const gui = new GUI({
     width: 400
 })
 
+let modelsLoaded = 0;
+const totalModelsToLoad = 2
+
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
 
+// Loading screen
+const loadingScreen = document.querySelector('.loading-screen');
 // Scene
 const scene = new THREE.Scene()
 
@@ -70,16 +75,27 @@ gltfLoader.load(
 
         gltf.scene.position.y = -3;
         scene.add(gltf.scene)
+        modelsLoaded++;
+
+        if (modelsLoaded >= totalModelsToLoad) {
+            loadingScreen.style.display = 'none';
+        }
     }
 )
 
 gltfLoader.load(
     'chairs.glb',
     (gltf) => {
-        const bakedMesh = gltf.scene.children.find(child => child.name === 'chairs')
+        loadingScreen.style.display = 'none';
         traverseMaterials(gltf.scene, chairMaterial);
         gltf.scene.position.y = -3;
         scene.add(gltf.scene)
+
+        modelsLoaded++;
+
+        if (modelsLoaded >= totalModelsToLoad) {
+            loadingScreen.style.display = 'none';
+        }
     }
 )
 
