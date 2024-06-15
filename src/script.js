@@ -1,4 +1,3 @@
-import GUI from 'lil-gui'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
@@ -14,10 +13,6 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
 /**
  * Base
  */
-// Debug
-const gui = new GUI({
-    width: 400
-})
 
 let modelsLoaded = 0;
 const totalModelsToLoad = 2
@@ -150,7 +145,6 @@ scene.add(camera)
 // Controls
 const controls = new OrbitControls(camera, canvas)
 controls.enableDamping = true
-
 /**
  * Renderer
  */
