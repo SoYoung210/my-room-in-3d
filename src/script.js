@@ -42,7 +42,7 @@ gltfLoader.setDRACOLoader(dracoLoader)
 /**
  * Textures
  */
-const bakedTexture = textureLoader.load('my-room-real-final-bake-merge-exclude-chair-2.jpg')
+const bakedTexture = textureLoader.load('exclude-chair.jpg')
 bakedTexture.flipY = false
 bakedTexture.colorSpace = THREE.SRGBColorSpace
 
@@ -56,13 +56,7 @@ chairTexture.colorSpace = THREE.SRGBColorSpace
 // Baked material
 const bakedMaterial = new THREE.MeshBasicMaterial({ map: bakedTexture })
 const chairMaterial = new THREE.MeshBasicMaterial({ map: chairTexture })
-const bakedMaterial2 = new THREE.MeshBasicMaterial({ color: 0xffffff  })
 
-// Portal light material
-const portalLightMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff })
-
-// Pole light material
-const poleLightMaterial = new THREE.MeshBasicMaterial({ color: 0xffffe5 })
 const light = new THREE.AmbientLight( 0xffffe5 );
 scene.add(light);
 // scene.add( light );
@@ -70,37 +64,37 @@ scene.add(light);
  * Model
  */
 gltfLoader.load(
-    'my-room-real-final-bake-merge-exclude-chair.glb',
+    'exclude-chair.glb',
     (gltf) => {
-        const bakedMesh = gltf.scene.children.find(child => child.name === 'materials')
+        traverseMaterials(gltf.scene, bakedMaterial);
 
-        // const portalLightMesh = gltf.scene.children.find(child => child.name === 'portalLight')
-        // const poleLightAMesh = gltf.scene.children.find(child => child.name === 'poleLightA')
-        // const poleLightBMesh = gltf.scene.children.find(child => child.name === 'poleLightB')
-
-        // bakedMesh.material = bakedMaterial
-        gltf.scene.traverse((child) => {
-            child.material = bakedMaterial
-        })
-        // portalLightMesh.material = portalLightMaterial
-        // poleLightAMesh.material = poleLightMaterial
-        // poleLightBMesh.material = poleLightMaterial
-         gltf.scene.position.y = -3;
+        gltf.scene.position.y = -3;
         scene.add(gltf.scene)
     }
 )
 
 gltfLoader.load(
-    'chair.glb',
+    'chairs.glb',
     (gltf) => {
-        gltf.scene.traverse((child) => {
-            child.material = chairMaterial
-        });
-
-         gltf.scene.position.y = -3;
+        const bakedMesh = gltf.scene.children.find(child => child.name === 'chairs')
+        traverseMaterials(gltf.scene, chairMaterial);
+        gltf.scene.position.y = -3;
         scene.add(gltf.scene)
     }
 )
+
+function traverseMaterials(object, material) {
+    if (object.isMesh) {
+        object.material = material;
+    }
+
+    if (object.children) {
+        object.children.forEach(child => {
+            traverseMaterials(child, material);
+        });
+    }
+}
+
 
 /**
  * Sizes
